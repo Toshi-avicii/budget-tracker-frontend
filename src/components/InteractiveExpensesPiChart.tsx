@@ -36,15 +36,6 @@ interface InteractiveExpensesPiChartProps {
     }[];
 }
 
-type expenseType = "food" | "transport" | "healthcare" | "education" | "clothes" | "entertainment" | "miscellanous";
-type ExpenseKey = EXPENSE_TYPES; // Ensure type safety
-type ExpenseMap = {
-    [key in ExpenseKey]: {
-        label: string;
-        color: string;
-    };
-};
-
 type ChartTypeInfo = {
     label: string;
     color: string;
