@@ -1,6 +1,5 @@
 'use client';
 
-import { EXPENSE_TYPES } from "@/lib/constants";
 import ExpensesChart from "./ExpensesChart"
 import InteractiveExpensesPiChart from "./InteractiveExpensesPiChart"
 import { useQuery } from "@tanstack/react-query";
@@ -8,11 +7,6 @@ import { getDataByExpenseTypes, getDataByRange } from "@/lib/helpers";
 import { useAppSelector } from "@/store/reduxHooks";
 import { useEffect, useState } from "react";
 import IncomeChart from "./IncomeChart";
-
-type ChartTypeInfo = {
-    type: string;
-    amount: number;
-}
 
 function DashboardChartWrapper() {
     const token = useAppSelector(state => state.auth.token);

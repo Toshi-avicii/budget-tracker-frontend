@@ -17,7 +17,7 @@ interface ExpenseTypeFilterProps<TData> {
   inputPlaceholder: string;
 }
 
-function TypeFilter<TData>({ tableHook, column, options, buttonText, emptyMessage, inputPlaceholder }: ExpenseTypeFilterProps<TData>) {
+function TypeFilter<TData>({ column, options, buttonText, emptyMessage, inputPlaceholder }: ExpenseTypeFilterProps<TData>) {
   const selectedValues: string[] = column.getFilterValue() || []
 
   const toggleValue = (value: string) => {

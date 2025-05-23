@@ -1,6 +1,6 @@
 'use client';
 
-import { getSummaryData, StatCardData } from "@/lib/helpers";
+import { getSummaryData } from "@/lib/helpers";
 import StatCard from "./StatCard";
 import { ChangePeriods } from "@/lib/constants";
 import { useQuery } from "@tanstack/react-query";

@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getAllTransactionsByUser } from "./helpers";
 import { useAppSelector } from "@/store/reduxHooks";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -20,7 +20,7 @@ function TransactionsTable() {
   })
 
   // 🚀 Always fresh pagination state from table
-  const { pageIndex, pageSize } = pagination;
+  const { pageIndex } = pagination;
 
   const transactionListQuery = useQuery({
     queryKey: ['get-transactions-by-user', pagination],

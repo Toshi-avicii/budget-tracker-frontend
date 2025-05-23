@@ -11,8 +11,7 @@ import {
     SidebarMenuItem,
     SidebarMenuSub,
     SidebarMenuSubButton,
-    SidebarMenuSubItem,
-    useSidebar,
+    SidebarMenuSubItem
 } from "@/components/ui/sidebar"
 import { TbLayoutDashboardFilled, TbUserSquareRounded, TbRepeat } from "react-icons/tb";
 import { PiPiggyBankFill } from "react-icons/pi";
@@ -68,7 +67,6 @@ export function AppSidebar() {
         },
     ]
 
-    const { isMobile } = useSidebar()
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader className="p-4">

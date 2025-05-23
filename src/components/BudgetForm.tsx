@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form'
 import { EXPENSE_TYPES, PERIOD_TYPES } from '@/lib/constants';
 import { z } from 'zod';
@@ -51,12 +50,12 @@ const budgetFormSchema = z.object({
 function BudgetForm() {
     const token = useAppSelector(state => state.auth.token);
 
-    const [formData] = useState<BudgetFormSchema>({
-        amount: 0,
-        expenseType: undefined,
-        name: '',
-        periodType: undefined
-    });
+    // const [formData] = useState<BudgetFormSchema>({
+    //     amount: 0,
+    //     expenseType: undefined,
+    //     name: '',
+    //     periodType: undefined
+    // });
 
     const budgetCategoryQuery = useQuery({
         queryKey: ['get-budget-categories-list'],

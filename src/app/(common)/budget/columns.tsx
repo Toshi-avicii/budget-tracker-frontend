@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table'
 import { BriefcaseMedical, ChevronDown, ChevronUp, Edit3, GraduationCap, MoreHorizontal, Plane, Puzzle, Shirt, Trash, Tv, UtensilsCrossed } from 'lucide-react';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -12,8 +12,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { deleteBudget } from './helpers';
 import { useAppSelector } from '@/store/reduxHooks';
-
-const typeOptions = ["transport", "entertainment", "healthcare", "food", 'education', 'miscellanous', 'clothes'];
 
 export const columns: ColumnDef<Budget>[] = [
     {

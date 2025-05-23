@@ -9,7 +9,7 @@ interface FixedNavLinkProps {
     children?: React.ReactNode;
 }
 
-function FixedNavLink({ href, icon, tooltipText, children }: FixedNavLinkProps) {
+function FixedNavLink({ href, icon, tooltipText }: FixedNavLinkProps) {
     return (
         <Link href={href}>
             <Tooltip delayDuration={0}>
