@@ -95,7 +95,8 @@ export async function googleSignInFn(body: Session) {
 }
 
 export async function getToken() {
-    const reqUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/get-token`;
+    const frontendUrl = 'https://budget-tracker-frontend-lime.vercel.app'
+    const reqUrl = `${frontendUrl}/api/get-token`;
     const response = await axios.get(reqUrl);
     return response;
 }
