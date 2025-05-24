@@ -10,7 +10,8 @@ import {
   useReactTable,
   VisibilityState,
   SortingState,
-  getSortedRowModel
+  getSortedRowModel,
+  Column
 } from "@tanstack/react-table"
 
 import {
@@ -104,6 +105,8 @@ export function DataTable<TData, TValue>({
   const expensePeriodOptions = ['No limit', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Half Yearly', 'Yearly'];
 
   const filters = table.getState().columnFilters;
+  const expenseTypeColumn = table.getColumn("expenseType") as Column<TData, string[]>;
+  const expensePeriodColumn = table.getColumn("expensePeriodType") as Column<TData, string[]>;
 
   return (
     <div>
@@ -122,25 +125,33 @@ export function DataTable<TData, TValue>({
           <div className="flex gap-2 flex-1 w-full lg:w-auto flex-wrap">
             {/* expense type */}
             <div className="flex-1 lg:flex-none">
-              <TypeFilter
-                tableHook={table}
-                column={table.getColumn("expenseType")}
-                options={expenseTypeOptions}
-                buttonText="Type"
-                emptyMessage="No Types Found."
-                inputPlaceholder="Expense Type"
-              />
+              {
+                expenseTypeColumn && (
+                  <TypeFilter
+                    tableHook={table}
+                    column={expenseTypeColumn}
+                    options={expenseTypeOptions}
+                    buttonText="Type"
+                    emptyMessage="No Types Found."
+                    inputPlaceholder="Expense Type"
+                  />
+                )
+              }
             </div>
             {/* period types */}
             <div className="flex-1 lg:flex-none">
-              <TypeFilter
-                tableHook={table}
-                column={table.getColumn("expensePeriodType")}
-                options={expensePeriodOptions}
-                buttonText="Period"
-                emptyMessage="No Expense Period Found."
-                inputPlaceholder="Expense Period"
-              />
+              {
+                expensePeriodColumn && (
+                  <TypeFilter
+                    tableHook={table}
+                    column={expensePeriodColumn}
+                    options={expensePeriodOptions}
+                    buttonText="Period"
+                    emptyMessage="No Expense Period Found."
+                    inputPlaceholder="Expense Period"
+                  />
+                )
+              }
             </div>
             {
               (filters.length > 0) && (
