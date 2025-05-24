@@ -250,7 +250,7 @@ export default function ChatBox() {
     const messageQuery = useQuery({
         queryKey: ['get-conversation', profile.username, selectedUserForChat?.name],
         queryFn: async ({ queryKey }) => {
-            const [loginUserName, targetUsername] = queryKey;
+            const [, loginUserName, targetUsername] = queryKey;
             const loginUser = allUsers.find(user => user.name === loginUserName);
             const targetUser = allUsers.find(user => user.name === targetUsername);
             console.log({
