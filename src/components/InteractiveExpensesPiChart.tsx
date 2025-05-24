@@ -51,7 +51,7 @@ export default function InteractiveExpensesPiChart({ chartData }: InteractiveExp
         return acc;
     }, {});
 
-    let chartConfig = {
+    const chartConfig = {
         percentage: {
             label: "Percentage",
         },

@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandSeparator } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Table } from "@tanstack/react-table";
+import { Column, Table } from "@tanstack/react-table";
 import { CirclePlus } from "lucide-react";
 
 interface ExpenseTypeFilterProps<TData> {
   tableHook: Table<TData>;
-  column: any;
+  column: Column<TData, string[]>;
   options: string[];
   buttonText: string;
   emptyMessage: string;
@@ -18,7 +18,9 @@ interface ExpenseTypeFilterProps<TData> {
 }
 
 function TypeFilter<TData>({ column, options, buttonText, emptyMessage, inputPlaceholder }: ExpenseTypeFilterProps<TData>) {
-  const selectedValues: string[] = column.getFilterValue() || []
+  const selectedValues: string[] = Array.isArray(column.getFilterValue())
+  ? (column.getFilterValue() as string[])
+  : [];
 
   const toggleValue = (value: string) => {
     const newValues = selectedValues.includes(value)

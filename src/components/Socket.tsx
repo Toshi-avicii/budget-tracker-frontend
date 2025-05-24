@@ -5,7 +5,7 @@ import { getSocket } from '@/lib/socket';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
 import { CircleUserRound, CornerUpLeft, CornerUpRight, MessageSquare, Send, X } from 'lucide-react';
-import { AnimatePresence, motion, useMotionValue } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 import { useAppSelector } from '@/store/reduxHooks';
 import clsx from 'clsx';
 import { toast } from 'sonner';
@@ -72,7 +72,7 @@ interface MessageProps {
     selectedUserForChat: ChatUser | null;
 }
 
-const ChatMessages = memo(function ({ messages, setIsDragging, setSelectedMsg, isDragging, selectedUserForChat }: ChatMessagesProps) {
+const ChatMessages = memo(function ChatMessages({ messages, setIsDragging, setSelectedMsg, isDragging, selectedUserForChat }: ChatMessagesProps) {
     return (selectedUserForChat && messages.length > 0) ? messages.map((msg) => {
         return (
             (msg.from.id === selectedUserForChat?.id || msg.to.id === selectedUserForChat?.id) && (
@@ -88,7 +88,7 @@ const ChatMessages = memo(function ({ messages, setIsDragging, setSelectedMsg, i
     }) : <div className='flex justify-center items-center'>No user Selected</div>
 })
 
-const ChatInput = memo(function ({ message, setIsTyping, setMessage, sendPrivateMessage }: ChatInputProps) {
+const ChatInput = memo(function ChatInput({ message, setIsTyping, setMessage, sendPrivateMessage }: ChatInputProps) {
     return (
         <div className='flex items-center'>
             <Input
@@ -113,7 +113,7 @@ const ChatInput = memo(function ({ message, setIsTyping, setMessage, sendPrivate
     )
 })
 
-const Message = memo(function ({ msg, setIsDragging, setSelectedMsg, isDragging }: MessageProps) {
+const Message = memo(function Message({ msg, setIsDragging, setSelectedMsg, isDragging }: MessageProps) {
     const profile = useAppSelector(state => state.profile);
     const date = new Date(msg.createdAt);
     const timeFormat = new Intl.DateTimeFormat('en-UK', {
@@ -157,7 +157,7 @@ const Message = memo(function ({ msg, setIsDragging, setSelectedMsg, isDragging 
                     })
                 }
             }}
-            onDragEnd={(evt, info) => {
+            onDragEnd={() => {
                 setSelectedMsg({
                     msg: msg.message,
                     name: msg.from.name,
@@ -229,7 +229,6 @@ export default function ChatBox() {
     const [connectedUsers, setConnectedUsers] = useState<ChatUser[]>([]);
     const [allUsers, setAllUsers] = useState<ChatUser[]>([]);
     const [isTyping, setIsTyping] = useState(false);
-    const [errorCount, setErrorCount] = useState(0);
     const [isDragging, setIsDragging] = useState<{ left: boolean, right: boolean, dragId: null | string, createdAt?: string }>({
         left: false,
         right: false,
@@ -251,7 +250,7 @@ export default function ChatBox() {
     const messageQuery = useQuery({
         queryKey: ['get-conversation', profile.username, selectedUserForChat?.name],
         queryFn: async ({ queryKey }) => {
-            const [_key, loginUserName, targetUsername] = queryKey;
+            const [loginUserName, targetUsername] = queryKey;
             const loginUser = allUsers.find(user => user.name === loginUserName);
             const targetUser = allUsers.find(user => user.name === targetUsername);
             if (loginUser && targetUser) {
@@ -343,7 +342,7 @@ export default function ChatBox() {
     // }, []);
 
     useEffect(() => {
-        const socket = getSocket(token, profile.username);
+        const socket = getSocket(token);
         let hasStoppedTrying = false;
         socket.connect();
 
@@ -443,7 +442,7 @@ export default function ChatBox() {
             return;
         }
 
-        const socket = getSocket(token, profile.username);
+        const socket = getSocket(token);
         const loginUser = allUsers.find(user => user.name === profile.username);
         const targetUser = allUsers.find(user => user.name === selectedUserForChat?.name);
         if (loginUser && targetUser) {

@@ -23,15 +23,6 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { createTransaction, Transaction } from "./helpers";
 
-interface NewTransactionFormSchema {
-    amount: number;
-    transactionType: "expense" | "income" | undefined;
-    date: Date;
-    paymentMethod: "cash" | "online" | "card" | undefined;
-    isRecurring: "recurring" | "oneTime" | undefined;
-    description: string | undefined;
-}
-
 interface BudgetItem {
     name: string;
     _id: string;

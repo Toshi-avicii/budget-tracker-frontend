@@ -51,7 +51,7 @@ function EditBudgetForm({ budgetData, onSuccessfulFormSubmit }: EditBudgetFormPr
         queryKey: ['get-budget-categories-list'],
         queryFn: async () => {
             // don't run this query if the previous data is the same as the new one.
-            const previousData = queryClient.getQueryData(['get-budget-categories-list']) as AxiosResponse<any, any>;
+            const previousData = queryClient.getQueryData(['get-budget-categories-list']) as AxiosResponse<BudgetItem[]>;
             const newData = await getBudgetCategories(token);
             if (previousData && JSON.stringify(previousData.data) === JSON.stringify(newData.data)) return previousData;
             return newData;
@@ -62,7 +62,7 @@ function EditBudgetForm({ budgetData, onSuccessfulFormSubmit }: EditBudgetFormPr
     const budgetPeriodQuery = useQuery({
         queryKey: ['get-budget-periods-list'],
         queryFn: async () => {
-            const previousData = queryClient.getQueryData<AxiosResponse<any>>(['get-budget-periods-list']);
+            const previousData = queryClient.getQueryData<AxiosResponse<BudgetItem[]>>(['get-budget-periods-list']);
             const newData = await getBudgetPeriods(token);
             if (previousData && JSON.stringify(previousData.data) === JSON.stringify(newData.data)) return previousData;
             return newData;

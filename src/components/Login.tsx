@@ -34,7 +34,6 @@ const formSchema = z.object({
 });
 
 function Login({
-    className,
     ...props
 }: React.ComponentPropsWithoutRef<'form'>) {
     const [formData] = useState<LoginFormData>({

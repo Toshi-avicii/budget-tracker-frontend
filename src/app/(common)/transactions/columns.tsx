@@ -4,6 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Transaction, TransactionType } from "./types";
 import { useState } from "react";
 import { BanknoteArrowDown, BanknoteArrowUp } from 'lucide-react'
+import TransactionTableCell from "@/components/TransactionTableCell";
 
 export const transactionsTableColumns: ColumnDef<Transaction>[] = [
     {
@@ -87,16 +88,7 @@ export const transactionsTableColumns: ColumnDef<Transaction>[] = [
         accessorKey: "description",
         header: 'Description',
         cell({row}) {
-            const description = row.getValue('description') as string;
-            const [isFullTextView, setIsFullTextView] = useState(false);
-            if(description.length <= 20) {
-                return <div>{description}</div>
-            }
-
-            if(description.length > 20) {
-                if(isFullTextView) return <div className="cursor-pointer max-w-40" onClick={() => setIsFullTextView(false)}>{description}</div>
-                else return <div className="cursor-pointer max-w-40" onClick={() => setIsFullTextView(true)}>{description.slice(0, 20)} ...</div>
-            }
+           return <TransactionTableCell row={row} />
         },
     }
 ]

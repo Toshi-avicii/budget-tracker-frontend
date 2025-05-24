@@ -2,7 +2,7 @@ import { io, Socket } from 'socket.io-client'
 
 let socket: ReturnType<typeof io>;
 
-export const getSocket = (token: string, username: any): Socket => {
+export const getSocket = (token: string): Socket => {
     if (!socket) {
         socket = io('https://budget-tracker-backend-z91v.onrender.com', {
             auth: {
