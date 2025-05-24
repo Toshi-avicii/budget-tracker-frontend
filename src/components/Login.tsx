@@ -59,7 +59,7 @@ function Login({
         onSuccess: async(data) => {
             console.log(data);
             setUserTokenCookie.mutate(data?.data.token);
-            await axios.post('/api/set-cookie', { token: data?.data.token });
+            await axios.post('/api/set-token', { token: data?.data.token });
             dispatch(save(data?.data.token));
             dispatch(changeProfileWhenRegister({
                 email: data?.data.email,
