@@ -35,7 +35,7 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/forgot-password', '/reset-password', '/budget/:path*', '/transactions', '/((?!_next|api|static|favicon.ico).*)']
+  matcher: ['/dashboard/:path*', '/forgot-password', '/reset-password', '/budget/:path*', '/transactions']
 }
 
 // export default auth((req) => {
