@@ -222,6 +222,7 @@ const Message = memo(function Message({ msg, setIsDragging, setSelectedMsg, isDr
 export default function ChatBox() {
     const bottomRef = useRef<HTMLDivElement | null>(null);
     const profile = useAppSelector(state => state.profile);
+    console.log(profile)
     const token = useAppSelector(state => state.auth.token);
     const [message, setMessage] = useState('');
     const [received, setReceived] = useState<ChatMsg[]>([]);
@@ -263,83 +264,6 @@ export default function ChatBox() {
     });
 
     const errorCountRef = useRef(0); // Persisted error counter
-
-    // useEffect(() => {
-    //     const socket = getSocket(token, profile.username);
-    //     let errorCount = 0;
-
-    //     socket.on('connect', () => {
-    //         toast.success(`Connected to socket, id: ${socket.id}`);
-    //         socket.emit('init', profile.username); // IMPORTANT
-    //     });
-
-    //     socket.on('clients-list', (users: Array<ChatUser>) => {
-    //         const allUsersExceptLoginPerson = users.filter(user => user.name !== profile.username);
-    //         setConnectedUsers(allUsersExceptLoginPerson);
-    //         if(Array.isArray(users)) {
-    //             setAllUsers(users);
-    //         }
-    //     });
-
-    //     socket.on('message', (msg) => {
-    //         if(msg) {
-    //             setReceived((prev) => {
-    //                 return [...prev, msg];
-    //             });
-    //         }
-    //     });
-
-    //     socket.on('chat-message', (data) => {
-    //         console.log('Received chat-message', data);
-    //     })
-
-    //     socket.on('receive-message', ({ from, message, socketId, to, replyMessage, replyFrom, replyTo, id }) => {
-    //         setReceived((prev) => {
-    //             if (replyMessage) {
-    //                 return [
-    //                     ...prev,
-    //                     {
-    //                         from: { id: from.id, name: from.name },
-    //                         message,
-    //                         to: { id: to.id, name: to.name },
-    //                         createdAt: new Date(),
-    //                         _id: replyMessage.id,
-    //                         replyMessage,
-    //                         replyFrom,
-    //                         replyTo
-    //                     }
-    //                 ]
-    //             }
-    //             return [
-    //                 ...prev,
-    //                 {
-    //                     from: { id: from.id, name: from.name },
-    //                     message,
-    //                     to: { id: to.id, name: to.name },
-    //                     createdAt: new Date(),
-    //                     _id: id
-    //                 }
-    //             ]
-    //         })
-    //     })
-
-    //     socket.on('connect_error', () => {
-    //         setErrorCount(prev => prev += 1);
-    //     });
-
-    //     if (errorCount <= 2) {
-    //         toast.error('Could not connect to the websocket');
-    //     }
-
-    //     console.log(errorCount);
-
-    //     return () => {
-    //         if(errorCount >= 5) {
-    //             socket.off('receive-message');
-    //             socket.off('connect');
-    //         }
-    //     };
-    // }, []);
 
     useEffect(() => {
         const socket = getSocket(token);
