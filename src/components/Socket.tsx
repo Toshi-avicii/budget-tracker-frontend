@@ -254,6 +254,8 @@ export default function ChatBox() {
             const loginUser = allUsers.find(user => user.name === loginUserName);
             const targetUser = allUsers.find(user => user.name === targetUsername);
             console.log({
+                queryKey,
+                loginUserName,
                 loginUser,
                 targetUser
             })
