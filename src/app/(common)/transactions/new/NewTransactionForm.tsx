@@ -80,7 +80,7 @@ function NewTransactionForm() {
         queryKey: ['get-budget-categories-list'],
         queryFn: async () => {
             // don't run this query if the previous data is the same as the new one.
-            const previousData = queryClient.getQueryData(['get-budget-categories-list']) as AxiosResponse<any, any>;
+            const previousData = queryClient.getQueryData(['get-budget-categories-list']) as AxiosResponse<BudgetItem[]>;
             const newData = await getBudgetCategories(token);
             if (previousData && JSON.stringify(previousData.data) === JSON.stringify(newData.data)) return previousData;
             return newData;

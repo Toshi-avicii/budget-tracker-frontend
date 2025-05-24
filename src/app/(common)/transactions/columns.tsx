@@ -2,7 +2,6 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Transaction, TransactionType } from "./types";
-import { useState } from "react";
 import { BanknoteArrowDown, BanknoteArrowUp } from 'lucide-react'
 import TransactionTableCell from "@/components/TransactionTableCell";
 
