@@ -95,7 +95,7 @@ export async function googleSignInFn(body: Session) {
 }
 
 export async function getToken() {
-    const reqUrl = `http://localhost:3000/api/get-token`;
+    const reqUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/get-token`;
     const response = await axios.get(reqUrl);
     return response;
 }
