@@ -222,7 +222,6 @@ const Message = memo(function Message({ msg, setIsDragging, setSelectedMsg, isDr
 export default function ChatBox() {
     const bottomRef = useRef<HTMLDivElement | null>(null);
     const profile = useAppSelector(state => state.profile);
-    console.log(profile)
     const token = useAppSelector(state => state.auth.token);
     const [message, setMessage] = useState('');
     const [received, setReceived] = useState<ChatMsg[]>([]);
@@ -254,6 +253,10 @@ export default function ChatBox() {
             const [loginUserName, targetUsername] = queryKey;
             const loginUser = allUsers.find(user => user.name === loginUserName);
             const targetUser = allUsers.find(user => user.name === targetUsername);
+            console.log({
+                loginUser,
+                targetUser
+            })
             if (loginUser && targetUser) {
                 return await getConversation({ token, user1: loginUser.id, user2: targetUser.id });
             }
@@ -262,6 +265,8 @@ export default function ChatBox() {
 
         enabled: !!selectedUserForChat,
     });
+
+    console.log(messageQuery)
 
     const errorCountRef = useRef(0); // Persisted error counter
 
