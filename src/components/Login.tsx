@@ -19,6 +19,7 @@ import { save } from '@/store/slices/auth.slice'
 import { changeProfileWhenGoogleSignIn, changeProfileWhenRegister } from '@/store/slices/profile.slice'
 import AppLoading from './AppLoading'
 import { signIn, useSession } from 'next-auth/react'
+import axios from 'axios';
 
 
 export interface LoginFormData {
@@ -55,9 +56,10 @@ function Login({
 
     const loginMutation = useMutation({
         mutationFn: login,
-        onSuccess: (data) => {
+        onSuccess: async(data) => {
             console.log(data);
             setUserTokenCookie.mutate(data?.data.token);
+            await axios.post('/api/set-cookie', { token: data?.data.token });
             dispatch(save(data?.data.token));
             dispatch(changeProfileWhenRegister({
                 email: data?.data.email,
@@ -74,6 +76,7 @@ function Login({
         mutationFn: googleSignInFn,
         onSuccess: (data) => {
           setUserTokenCookie.mutate(data.data.token)
+          
           dispatch(save(data.data.token));
           dispatch(changeProfileWhenGoogleSignIn({
             email: data.data.email,
