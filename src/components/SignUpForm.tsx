@@ -106,13 +106,13 @@ export default function SignUpForm({
   const googleSignInMutation = useMutation({
     mutationFn: googleSignInFn,
     onSuccess: (data) => {
-      setUserTokenCookie.mutate(data.data.token)
-      dispatch(save(data.data.token));
+      setUserTokenCookie.mutate(data?.data.token)
+      dispatch(save(data?.data.token));
       dispatch(changeProfileWhenGoogleSignIn({
-        email: data.data.email,
-        username: data.data.username,
-        isSignedUpWithGoogle: data.data.isSignedUpWithGoogle,
-        avatarUrl: data.data.avatarUrl
+        email: data?.data.email,
+        username: data?.data.username,
+        isSignedUpWithGoogle: data?.data.isSignedUpWithGoogle,
+        avatarUrl: data?.data.avatarUrl
       }));
       router.replace('/dashboard');
     },
