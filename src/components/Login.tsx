@@ -106,17 +106,17 @@ function Login({
 
     const googleSignIn = async() => {
         try {
-            const result = await signIn("google", { redirect: false, redirectTo: '/dashboard' });
+            const result = await signIn("google", { redirect: false });
             console.log({
                 result
             })
-            if(result?.error) {
+            if(!result || result?.error) {
                 throw new Error('Google sign in failed');
             } 
             
             const session = await getSession(); // get updated session after sign in
             
-            if (session) {
+            if (session?.accessToken) {
                 googleSignInMutation.mutate(session)
             } else {
                 console.log('No session found after google login')
