@@ -110,7 +110,7 @@ function Login({
             console.log({
                 result
             })
-            if(!result || result?.error) {
+            if(result?.error) {
                 throw new Error('Google sign in failed');
             } 
             
