@@ -18,7 +18,7 @@ import { useAppDispatch } from '@/store/reduxHooks'
 import { save } from '@/store/slices/auth.slice'
 import { changeProfileWhenGoogleSignIn, changeProfileWhenRegister } from '@/store/slices/profile.slice'
 import AppLoading from './AppLoading'
-import { signIn, useSession } from 'next-auth/react'
+import { getSession, signIn, useSession } from 'next-auth/react'
 import axios from 'axios';
 
 
@@ -112,11 +112,14 @@ function Login({
             })
             if(result?.error) {
                 throw new Error('Google sign in failed');
+            } 
+            
+            const session = await getSession(); // get updated session after sign in
+            
+            if (session) {
+                googleSignInMutation.mutate(session)
             } else {
-                console.log({
-                    session
-                })
-                if (session) googleSignInMutation.mutate(session);
+                console.log('No session found after google login')
             }
 
         } catch(err) {
