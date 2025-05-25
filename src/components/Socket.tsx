@@ -253,12 +253,6 @@ export default function ChatBox() {
             const [, loginUserName, targetUsername] = queryKey;
             const loginUser = allUsers.find(user => user.name === loginUserName);
             const targetUser = allUsers.find(user => user.name === targetUsername);
-            console.log({
-                queryKey,
-                loginUserName,
-                loginUser,
-                targetUser
-            })
             if (loginUser && targetUser) {
                 return await getConversation({ token, user1: loginUser.id, user2: targetUser.id });
             }
@@ -267,8 +261,6 @@ export default function ChatBox() {
 
         enabled: !!selectedUserForChat,
     });
-
-    console.log(messageQuery)
 
     const errorCountRef = useRef(0); // Persisted error counter
 

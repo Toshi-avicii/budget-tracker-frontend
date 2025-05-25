@@ -76,7 +76,7 @@ function Login({
         mutationFn: googleSignInFn,
         onSuccess: (data) => {
           setUserTokenCookie.mutate(data.data.token)
-          
+          console.log(data)
           dispatch(save(data.data.token));
           dispatch(changeProfileWhenGoogleSignIn({
             email: data.data.email,
@@ -109,6 +109,7 @@ function Login({
             if(result?.error) {
                 throw new Error('Google sign in failed');
             } else {
+                console.log(session)
                 if (session) googleSignInMutation.mutate(session);
             }
 
