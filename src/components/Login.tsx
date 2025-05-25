@@ -106,7 +106,7 @@ function Login({
 
     const googleSignIn = async() => {
         try {
-            const result = await signIn("google");
+            const result = await signIn("google", { redirect: false, redirectTo: '/dashboard' });
             console.log({
                 result
             })
