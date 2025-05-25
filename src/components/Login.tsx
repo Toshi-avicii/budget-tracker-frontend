@@ -75,8 +75,8 @@ function Login({
     const googleSignInMutation = useMutation({
         mutationFn: googleSignInFn,
         onSuccess: (data) => {
+          console.log({ data })
           setUserTokenCookie.mutate(data.data.token)
-          console.log(data)
           dispatch(save(data.data.token));
           dispatch(changeProfileWhenGoogleSignIn({
             email: data.data.email,
@@ -105,11 +105,16 @@ function Login({
 
     const googleSignIn = async() => {
         try {
-            const result = await signIn("google", { redirect: false, redirectTo: '/dashboard' });
+            const result = await signIn("google");
+            console.log({
+                result
+            })
             if(result?.error) {
                 throw new Error('Google sign in failed');
             } else {
-                console.log(session)
+                console.log({
+                    session
+                })
                 if (session) googleSignInMutation.mutate(session);
             }
 

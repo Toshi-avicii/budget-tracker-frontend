@@ -91,6 +91,7 @@ export async function googleSignInFn(body: Session) {
 
     }
     const response = await axios.post(reqUrl, reqBody);
+    console.log({ response })
     return response;
 }
 
