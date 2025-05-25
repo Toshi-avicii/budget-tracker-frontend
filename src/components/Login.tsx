@@ -74,15 +74,16 @@ function Login({
 
     const googleSignInMutation = useMutation({
         mutationFn: googleSignInFn,
-        onSuccess: (data) => {
+        onSuccess: async(data) => {
           console.log({ data })
-          setUserTokenCookie.mutate(data.data.token)
-          dispatch(save(data.data.token));
+          setUserTokenCookie.mutate(data?.data.token)
+          await axios.post('/api/set-token', { token: data?.data.token });
+          dispatch(save(data?.data.token));
           dispatch(changeProfileWhenGoogleSignIn({
-            email: data.data.email,
-            username: data.data.username,
-            isSignedUpWithGoogle: data.data.isSignedUpWithGoogle,
-            avatarUrl: data.data.avatarUrl
+            email: data?.data.email,
+            username: data?.data.username,
+            isSignedUpWithGoogle: data?.data.isSignedUpWithGoogle,
+            avatarUrl: data?.data.avatarUrl
           }));
         },
         onError: (error) => {

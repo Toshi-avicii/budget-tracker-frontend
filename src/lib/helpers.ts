@@ -81,18 +81,26 @@ export async function resetPasswordFn(body: { password: string, token: string })
 
 export async function googleSignInFn(body: Session) {
     const reqUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/google-sign-in`;
-    const reqBody = {
-        expires: body.expires,
-        userData: {
-            name: body.user?.name,
-            email: body.user?.email,
-            image: body.user?.image
+    try {
+        const reqBody = {
+            expires: body.expires,
+            userData: {
+                name: body.user?.name,
+                email: body.user?.email,
+                image: body.user?.image
+            }
+    
         }
-
+        const response = await axios.post(reqUrl, reqBody);
+        console.log({ response })
+        return response;
+    } catch(err) {
+         if (err instanceof AxiosError) {
+            throw new Error(err.response?.data?.message)
+        } else if (err instanceof Error) {
+            throw new Error(err.message);
+        }
     }
-    const response = await axios.post(reqUrl, reqBody);
-    console.log({ response })
-    return response;
 }
 
 export async function getToken() {
