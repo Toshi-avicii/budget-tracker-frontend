@@ -18,7 +18,7 @@ import { useAppDispatch } from '@/store/reduxHooks'
 import { save } from '@/store/slices/auth.slice'
 import { changeProfileWhenGoogleSignIn, changeProfileWhenRegister } from '@/store/slices/profile.slice'
 import AppLoading from './AppLoading'
-import { getSession, signIn, useSession } from 'next-auth/react'
+import { getSession, signIn } from 'next-auth/react'
 import axios from 'axios';
 
 
@@ -42,7 +42,7 @@ function Login({
         password: ''
     });
 
-    const { data: session } = useSession();
+    // const { data: session } = useSession();
     const dispatch = useAppDispatch();
     const router = useRouter();
 
