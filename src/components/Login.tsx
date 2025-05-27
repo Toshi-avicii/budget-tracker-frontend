@@ -180,7 +180,6 @@ function Login({
                     <Link 
                         className='w-full h-full items-center justify-center flex gap-x-2' 
                         href={`${process.env.NEXT_PUBLIC_API_URL}/auth/google`}
-                        // href="http://localhost:5000/api/auth/google"
                     >
                         <FcGoogle />
                         Login with Google
