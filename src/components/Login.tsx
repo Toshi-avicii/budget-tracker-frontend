@@ -20,6 +20,7 @@ import { changeProfileWhenGoogleSignIn, changeProfileWhenRegister } from '@/stor
 import AppLoading from './AppLoading'
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import { Session } from 'next-auth';
 
 interface GoogleJwtPayload {
     id: string;
@@ -96,9 +97,19 @@ function Login({
                     if (decoded.exp < currentTime) {
                         throw new Error("Token has expired");
                     }
+
+                    const sessionToBeSent: Session = {
+                        expires: new Date(decoded.exp * 1000).toUTCString(),
+                        user: {
+                            name: decoded.name,
+                            email: decoded.email,
+                            image: decoded.picture
+                        }
+                    }
     
                     await axios.post('/api/set-token', { token });
                     setUserTokenCookie.mutate(token)
+                    await googleSignInFn(sessionToBeSent);
                     dispatch(save(token));
                     dispatch(changeProfileWhenGoogleSignIn({
                         email: decoded.email,
@@ -180,6 +191,7 @@ function Login({
                     <Link 
                         className='w-full h-full items-center justify-center flex gap-x-2' 
                         href={`${process.env.NEXT_PUBLIC_API_URL}/auth/google`}
+                        // href="http://localhost:5000/api/auth/google"
                     >
                         <FcGoogle />
                         Login with Google
