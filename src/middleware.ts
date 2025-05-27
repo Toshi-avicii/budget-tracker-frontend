@@ -26,7 +26,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(origin);
   }
 
-  // do not let the user visit these pages if the user already has the token
+  // // do not let the user visit these pages if the user already has the token
   if (tokenCookie && (excludedPaths.includes(pathname))) {
     return NextResponse.redirect(`${origin}/dashboard`);
   }

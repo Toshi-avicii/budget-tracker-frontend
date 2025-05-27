@@ -105,6 +105,7 @@ export async function googleSignInFn(body: Session) {
 
 export async function getToken() {
     const frontendUrl = 'https://budget-tracker-frontend-lime.vercel.app'
+    // const frontendUrl = 'http://localhost:3000';
     const reqUrl = `${frontendUrl}/api/get-token`;
     const response = await axios.get(reqUrl);
     return response;

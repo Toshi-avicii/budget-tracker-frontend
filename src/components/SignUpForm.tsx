@@ -21,12 +21,23 @@ import { HiOutlineExclamationCircle } from "react-icons/hi2";
 import clsx from "clsx";
 import { motion } from 'motion/react'
 import { RxCrossCircled } from "react-icons/rx";
-import { signIn, useSession } from "next-auth/react";
+import axios from "axios";
+import { jwtDecode } from 'jwt-decode'
 
 export interface SignUpFormData {
   username: string;
   email: string;
   password: string;
+}
+
+interface GoogleJwtPayload {
+  id: string;
+  name: string;
+  email: string;
+  isSignedUpWithGoogle: boolean;
+  picture: string;
+  iat: number;
+  exp: number;
 }
 
 const formSchema = z.object({
@@ -45,10 +56,10 @@ export default function SignUpForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"form">) {
-  const { data: session } = useSession();
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [isAlertError, setIsAlertError] = useState<boolean>(false);
+  const [isGoogleBtnClicked, setIsGoogleBtnClicked] = useState(false);
   const [formData] = useState<SignUpFormData>({
     email: '',
     password: '',
@@ -122,26 +133,42 @@ export default function SignUpForm({
   })
 
   useEffect(() => {
-    if (setUserTokenCookie.status === 'success') {
-      router.replace('/dashboard');
-    }
-  }, [setUserTokenCookie.status]);
+    const checkToken = async () => {
+      if (!isGoogleBtnClicked) {
+        const token = new URLSearchParams(window.location.search).get("token");
+        try {
+          if (!token) throw new Error("No token found");
+          setIsGoogleBtnClicked(true)
+          const decoded = jwtDecode<GoogleJwtPayload>(token);
+          // Check expiration manually
+          const currentTime = Math.floor(Date.now() / 1000);
+          if (decoded.exp < currentTime) {
+            throw new Error("Token has expired");
+          }
 
-  const googleSignIn = async () => {
-    try {
-      const result = await signIn("google", { redirect: false, redirectTo: '/dashboard' });
-      if (result?.error) {
-        throw new Error('Google sign in failed');
-      } else {
-        if (session) googleSignInMutation.mutate(session);
-      }
+          setUserTokenCookie.mutate(token)
+          await axios.post('/api/set-token', { token });
+          dispatch(save(token));
+          dispatch(changeProfileWhenGoogleSignIn({
+            email: decoded.email,
+            username: decoded.name,
+            isSignedUpWithGoogle: decoded.isSignedUpWithGoogle,
+            avatarUrl: decoded.picture
+          }));
 
-    } catch (err) {
-      if (err instanceof Error) {
-        console.log(err.message);
+          router.replace('/dashboard')
+
+        } catch (err) {
+          if (err instanceof Error) {
+            console.log(err.message);
+          }
+        }
       }
     }
-  }
+
+    checkToken()
+
+  }, [isGoogleBtnClicked]);
 
   return (
     <>
@@ -261,9 +288,15 @@ export default function SignUpForm({
             Or continue with
           </span>
         </div>
-        <Button variant="outline" className="w-full" onClick={googleSignIn}>
-          <FcGoogle />
-          Sign up with Google
+        <Button variant="outline" className="p-0 w-full flex justify-center items-center">
+          <Link 
+            className='w-full h-full items-center justify-center flex gap-x-2' 
+            // href="http://localhost:5000/api/auth/google"
+            href={`${process.env.NEXT_PUBLIC_API_URL}/auth/google`}
+          >
+            <FcGoogle />
+            Login with Google
+          </Link>
         </Button>
         <div className="text-center text-sm">
           Already have an account?{" "}

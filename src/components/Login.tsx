@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Button } from './ui/button'
 import { FcGoogle } from 'react-icons/fc'
@@ -18,9 +18,18 @@ import { useAppDispatch } from '@/store/reduxHooks'
 import { save } from '@/store/slices/auth.slice'
 import { changeProfileWhenGoogleSignIn, changeProfileWhenRegister } from '@/store/slices/profile.slice'
 import AppLoading from './AppLoading'
-import { getSession, signIn } from 'next-auth/react'
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 
+interface GoogleJwtPayload {
+    id: string;
+    name: string;
+    email: string;
+    isSignedUpWithGoogle: boolean;
+    picture: string;
+    iat: number;
+    exp: number;
+}
 
 export interface LoginFormData {
     email: string;
@@ -37,12 +46,13 @@ const formSchema = z.object({
 function Login({
     ...props
 }: React.ComponentPropsWithoutRef<'form'>) {
+    const [isGoogleBtnClicked, setIsGoogleBtnClicked] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [formData] = useState<LoginFormData>({
         email: '',
         password: ''
-    });
+    })
 
-    // const { data: session } = useSession();
     const dispatch = useAppDispatch();
     const router = useRouter();
 
@@ -56,7 +66,7 @@ function Login({
 
     const loginMutation = useMutation({
         mutationFn: login,
-        onSuccess: async(data) => {
+        onSuccess: async (data) => {
             console.log(data);
             setUserTokenCookie.mutate(data?.data.token);
             await axios.post('/api/set-token', { token: data?.data.token });
@@ -72,22 +82,65 @@ function Login({
         }
     });
 
+    useEffect(() => {
+        const checkToken = async () => {
+            if(!isGoogleBtnClicked) {
+                const token = new URLSearchParams(window.location.search).get("token");
+                try {
+                    setLoading(true)
+                    if (!token) throw new Error("No token found");
+                    setIsGoogleBtnClicked(true)
+                    const decoded = jwtDecode<GoogleJwtPayload>(token);
+                    // Check expiration manually
+                    const currentTime = Math.floor(Date.now() / 1000);
+                    if (decoded.exp < currentTime) {
+                        throw new Error("Token has expired");
+                    }
+    
+                    await axios.post('/api/set-token', { token });
+                    setUserTokenCookie.mutate(token)
+                    dispatch(save(token));
+                    dispatch(changeProfileWhenGoogleSignIn({
+                        email: decoded.email,
+                        username: decoded.name,
+                        isSignedUpWithGoogle: decoded.isSignedUpWithGoogle,
+                        avatarUrl: decoded.picture
+                    }));
+    
+                    router.replace('/dashboard')
+    
+                } catch (err) {
+                    if (err instanceof Error) {
+                        console.log(err.message);
+                    }
+                } finally {
+                    setLoading(false)
+                }
+            }
+        }
+
+        checkToken()
+
+    }, [isGoogleBtnClicked]);
+
     const googleSignInMutation = useMutation({
         mutationFn: googleSignInFn,
-        onSuccess: async(data) => {
-          console.log({ data })
-          setUserTokenCookie.mutate(data?.data.token)
-          await axios.post('/api/set-token', { token: data?.data.token });
-          dispatch(save(data?.data.token));
-          dispatch(changeProfileWhenGoogleSignIn({
-            email: data?.data.email,
-            username: data?.data.username,
-            isSignedUpWithGoogle: data?.data.isSignedUpWithGoogle,
-            avatarUrl: data?.data.avatarUrl
-          }));
+        onSuccess: async (data) => {
+            console.log({ data })
+            setUserTokenCookie.mutate(data?.data.token)
+            await axios.post('/api/set-token', { token: data?.data.token });
+            dispatch(save(data?.data.token));
+            dispatch(changeProfileWhenGoogleSignIn({
+                email: data?.data.email,
+                username: data?.data.username,
+                isSignedUpWithGoogle: data?.data.isSignedUpWithGoogle,
+                avatarUrl: data?.data.avatarUrl
+            }));
+
+            router.replace('/dashboard')
         },
         onError: (error) => {
-          console.log(error)
+            console.log(error)
         }
     });
 
@@ -104,35 +157,10 @@ function Login({
         loginMutation.mutate(values);
     }
 
-    const googleSignIn = async() => {
-        try {
-            const result = await signIn("google", { redirect: false });
-            console.log({
-                result
-            })
-            if(result?.error) {
-                throw new Error('Google sign in failed');
-            } 
-            
-            const session = await getSession(); // get updated session after sign in
-            
-            if (session?.accessToken) {
-                googleSignInMutation.mutate(session)
-            } else {
-                console.log('No session found after google login')
-            }
-
-        } catch(err) {
-            if(err instanceof Error) {
-                console.log(err.message);
-            }
-        }
-    }
-
     return (
         <>
             {
-                ((!loginMutation.isIdle && (loginMutation.isPending || setUserTokenCookie.isPending)) || (!googleSignInMutation.isIdle || googleSignInMutation.isPending)) && <AppLoading />
+                ((!loginMutation.isIdle && (loginMutation.isPending || setUserTokenCookie.isPending)) || (!googleSignInMutation.isIdle || googleSignInMutation.isPending) || loading) && <AppLoading />
             }
             {(!loginMutation.isIdle && (loginMutation.isError || setUserTokenCookie.isError)) &&
                 <Alert
@@ -148,9 +176,15 @@ function Login({
             }
 
             <div className="flex flex-col gap-4 mb-6">
-                <Button variant="outline" className="w-full" onClick={googleSignIn}>
-                    <FcGoogle />
-                    Login with Google
+                <Button variant="outline" className="p-0 w-full flex justify-center items-center">
+                    <Link 
+                        className='w-full h-full items-center justify-center flex gap-x-2' 
+                        href={`${process.env.NEXT_PUBLIC_API_URL}/auth/google`}
+                        // href="http://localhost:5000/api/auth/google"
+                    >
+                        <FcGoogle />
+                        Login with Google
+                    </Link>
                 </Button>
             </div>
 

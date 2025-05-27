@@ -27,6 +27,7 @@ import clsx from "clsx";
 import AppLoading from "./AppLoading";
 import { AvatarImage } from "./ui/avatar";
 import Link from "next/link";
+import axios from "axios";
 
 export function ProfileDropdown() {
     const profile = useAppSelector((state) => state.profile);
@@ -44,6 +45,7 @@ export function ProfileDropdown() {
     const handleLogout = async () => {
         // Invalidate queries instead of just refetching
         queryClient.invalidateQueries({ queryKey: ['logout'] });
+        await axios.get('/api/delete-token');
 
         // Wait for refetch to complete
         const result = await refetch();
